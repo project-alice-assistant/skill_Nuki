@@ -78,6 +78,19 @@ class Nuki(AliceSkill):
 
 		action = session.slotValue('actionType')
 		lockName = session.slotValue('lockName')
+		location = session.slotRawValue('location')
+
+		deviceType = self.DeviceManager.getDeviceType(self._name, 'SmartLock')
+		locks = list()
+		if not location and not lockName:
+			locId = self.DeviceManager.getDevice(uid=session.deviceUid).getLocation().id
+			devices = self.DeviceManager.getDevicesByLocation(locationId=locId, deviceType=deviceType, connectedOnly=True)
+		elif location and not lockName:
+			loc = self.LocationManager.getLocationByName(name=location)
+			if not loc:
+				self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownLocation'))
+				return
+			devices = self.DeviceManager.getDevicesByLocation(locationId=loc.Id, deviceType=deviceType, connectedOnly=True)
 
 		if lockName == 'all':
 			for lockName, lock in self._smartLocks.items():
@@ -90,6 +103,9 @@ class Nuki(AliceSkill):
 					self.logWarning(f'Smart lock with name **{lockName}** not found, skipping')
 					continue
 
+				locks.append(lock['smartlockId'])
 		else:
 			if lockName not in self._smartLocks:
 				self.endDialog(sessionId=session.sessionId, text=self.randomTalk('smartLockNotFound', replace=[lockName]))
+				return
+			locks.append(self._smartLocks['lockName']['smartlockId'])

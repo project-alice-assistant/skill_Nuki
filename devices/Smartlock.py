@@ -16,7 +16,7 @@ class Smartlock(Device):
 			'totalDeviceLimit'      : 0,
 			'allowLocationLinks'    : True,
 			'allowHeartbeatOverride': False,
-			'heartbeatRate'         : 5,
+			'heartbeatRate'         : 0,
 			'abilities'             : [DeviceAbility.NONE]
 		}
 

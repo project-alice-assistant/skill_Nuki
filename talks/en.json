@@ -1,6 +1,10 @@
 {
+	"unknownLocation": [
+		"Sorry, I don't know this location",
+		"I'm sorry, there's no location of that name in your house"
+	],
 	"smartLockNotFound": [
-		"The smart lock named ",
-		"another example sentence"
+		"Sorry but he smart lock named {} doesn't exist.",
+		"I'm sorry but I couldn't find any smart lock named {}."
 	]
 }

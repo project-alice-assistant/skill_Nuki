@@ -51,7 +51,7 @@
 			"utterances": [
 				"{open:=>actionType} the door",
 				"{lock:=>actionType} the door please",
-				"{lock:=>actionType} the door in the {entrance:=>Alice/Room} please",
+				"{lock:=>actionType} the door in the {entrance:=>location} please",
 				"please {lock:=>actionType} the door",
 				"can you please {close:=>actionType} the door",
 				"can you {unlock:=>actionType} the {main=>lockName} lock",
@@ -74,6 +74,13 @@
 					"name": "lockName",
 					"required": false,
 					"type": "actionType",
+					"missingQuestion": ""
+				},
+				,
+				{
+					"name": "location",
+					"required": false,
+					"type": "Alice/Location",
 					"missingQuestion": ""
 				}
 			]
