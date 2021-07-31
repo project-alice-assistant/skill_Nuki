@@ -1,0 +1,18 @@
+{
+	"deviceConfigs": {
+		"dummy": {
+			"defaultValue": false,
+			"dataType"    : "boolean",
+			"isSensitive" : false,
+			"description" : "Remove me!!"
+		}
+	},
+	"linkConfigs": {
+		"alsoDummy": {
+			"defaultValue": false,
+			"dataType"    : "boolean",
+			"isSensitive" : false,
+			"description" : "Remove me too!!"
+		}
+	}
+}

@@ -1,0 +1,15 @@
+{
+	"name": "nuki",
+	"version": "0.0.1",
+	"category": "projectalice",
+	"dependencies": {},
+	"author": "Psychokiller1888",
+	"license": "GPLv3",
+	"node-red": {
+		"nodes": {
+			"lock": "lock.js"
+
+		}
+	},
+	"devDependencies": {}
+}
