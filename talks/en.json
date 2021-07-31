@@ -1,6 +1,6 @@
 {
-	"dummy": [
-		"example sentence",
+	"smartLockNotFound": [
+		"The smart lock named ",
 		"another example sentence"
 	]
 }

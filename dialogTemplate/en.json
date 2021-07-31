@@ -2,15 +2,43 @@
 	"skill": "Nuki",
 	"slotTypes": [
 		{
-			"name": "DummySlot",
+			"name": "lockName",
 			"matchingStrictness": null,
-			"automaticallyExtensible": false,
+			"automaticallyExtensible": true,
 			"useSynonyms": true,
 			"values": [
 				{
-					"value": "foo",
+					"value": "main",
+					"synonyms": []
+				},
+				{
+					"value": "all",
 					"synonyms": [
-						"bar"
+						"every"
+					]
+				}
+			]
+		},
+		{
+			"name": "actionType",
+			"matchingStrictness": null,
+			"automaticallyExtensible": true,
+			"useSynonyms": true,
+			"values": [
+				{
+					"value": "unlock",
+					"synonyms": [
+						"open",
+						"unlocked",
+						"opened"
+					]
+				},
+				{
+					"value": "lock",
+					"synonyms": [
+						"close",
+						"locked",
+						"closed"
 					]
 				}
 			]
@@ -18,17 +46,34 @@
 	],
 	"intents": [
 		{
-			"name": "Dummy",
+			"name": "HandleLock",
 			"enabledByDefault": true,
 			"utterances": [
-				"dummy {foo:=>DummySlotName}",
-				"bar"
+				"{open:=>actionType} the door",
+				"{lock:=>actionType} the door please",
+				"{lock:=>actionType} the door in the {entrance:=>Alice/Room} please",
+				"please {lock:=>actionType} the door",
+				"can you please {close:=>actionType} the door",
+				"can you {unlock:=>actionType} the {main=>lockName} lock",
+				"please {close:=>actionType} the {main=>lockName} smart lock",
+				"{lock:=>actionType} my {main=>lockName} smart lock",
+				"{lock:=>actionType} {all=>lockName} my smart locks",
+				"please {unlock:=>actionType} {all=>lockName} the doors",
+				"{unlock:=>actionType} my {main=>lockName} Nuki",
+				"make sure the {main=>lockName} door is {unlocked:=>actionType}",
+				"check that my {main=>lockName} smart lock is {locked:=>actionType}"
 			],
 			"slots": [
 				{
-					"name": "DummySlotName",
+					"name": "actionType",
 					"required": false,
-					"type": "DummySlot",
+					"type": "actionType",
+					"missingQuestion": ""
+				},
+				{
+					"name": "lockName",
+					"required": false,
+					"type": "actionType",
 					"missingQuestion": ""
 				}
 			]

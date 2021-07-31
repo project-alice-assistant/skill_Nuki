@@ -1,0 +1,9 @@
+{
+	"apiToken": {
+		"defaultValue": "",
+		"dataType"    : "string",
+		"isSensitive" : true,
+		"description" : "Your Nuki developper API token",
+		"onUpdate"	  : "connectAPI"
+	}
+}
