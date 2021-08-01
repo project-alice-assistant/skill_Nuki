@@ -1,7 +1,6 @@
 import sqlite3
 from typing import Dict, Union
 
-from core.commons import constants
 from core.device.model.Device import Device
 from core.device.model.DeviceAbility import DeviceAbility
 

@@ -6,5 +6,27 @@
 	"smartLockNotFound": [
 		"Sorry but he smart lock named {} doesn't exist.",
 		"I'm sorry but I couldn't find any smart lock named {}."
-	]
+	],
+	"doneClose": {
+		"default": [
+			"Ok, smart lock closed!",
+			"Sure, closed!",
+			"Done, it's now close"
+		],
+		"short": [
+			"Ok!",
+			"Done!"
+		]
+	},
+	"doneOpen": {
+		"default": [
+			"Ok, smart lock open!",
+			"Sure, open Sesame!",
+			"Done, it's now open"
+		],
+		"short": [
+			"Ok!",
+			"Done!"
+		]
+	}
 }

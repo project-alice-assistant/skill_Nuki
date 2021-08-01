@@ -3,7 +3,7 @@ import requests
 from core.ProjectAliceExceptions import SkillStartingFailed
 from core.base.model.AliceSkill import AliceSkill
 from core.dialog.model.DialogSession import DialogSession
-from core.util.Decorators import IntentHandler
+from core.util.Decorators import IntentHandler, KnownUser
 
 
 class Nuki(AliceSkill):
@@ -25,6 +25,7 @@ class Nuki(AliceSkill):
 		super().onStart()
 		if not self.connectAPI():
 			raise SkillStartingFailed(skillName=self.name, error='Please provide a valid Nuki developper API token in the skill settings')
+
 		self._connected = True
 		self.getSmartLocks()
 
@@ -72,6 +73,7 @@ class Nuki(AliceSkill):
 
 
 	@IntentHandler('HandleLock')
+	@KnownUser
 	def handleLock(self, session: DialogSession, **_kwargs):
 		if not self._connected:
 			self.logWarning('Cannot handle smart locks if API not connected')
@@ -81,31 +83,34 @@ class Nuki(AliceSkill):
 		location = session.slotRawValue('location')
 
 		deviceType = self.DeviceManager.getDeviceType(self._name, 'SmartLock')
-		locks = list()
-		if not location and not lockName:
-			locId = self.DeviceManager.getDevice(uid=session.deviceUid).getLocation().id
-			devices = self.DeviceManager.getDevicesByLocation(locationId=locId, deviceType=deviceType, connectedOnly=True)
+		if lockName == 'all':
+			devices = self.DeviceManager.getDevicesByType(deviceType=deviceType)
+		elif not location and not lockName:
+			devices = self.DeviceManager.getDevicesByLocation(locationId=session.locationId, deviceType=deviceType)
 		elif location and not lockName:
 			loc = self.LocationManager.getLocationByName(name=location)
 			if not loc:
 				self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownLocation'))
 				return
-			devices = self.DeviceManager.getDevicesByLocation(locationId=loc.Id, deviceType=deviceType, connectedOnly=True)
-
-		if lockName == 'all':
-			for lockName, lock in self._smartLocks.items():
-				response = requests.get(
-					url=f'{self.API_URL}smartlock/{lock["smartlockId"]}',
-					headers=self.HEADERS
-				)
-
-				if response.status_code != 200:
-					self.logWarning(f'Smart lock with name **{lockName}** not found, skipping')
-					continue
-
-				locks.append(lock['smartlockId'])
+			devices = self.DeviceManager.getDevicesByLocation(locationId=loc.id, deviceType=deviceType)
 		else:
 			if lockName not in self._smartLocks:
-				self.endDialog(sessionId=session.sessionId, text=self.randomTalk('smartLockNotFound', replace=[lockName]))
+				self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownDevice', replace=lockName))
 				return
-			locks.append(self._smartLocks['lockName']['smartlockId'])
+			devices = [self._smartLocks[lockName]]
+
+		for device in devices:
+			nukiId = device.getConfig('smartlockId', None)
+			if not nukiId:
+				continue
+
+			response = requests.get(
+				url=f'{self.API_URL}smartlock/{nukiId}/action/{action}',
+				headers=self.HEADERS
+			)
+
+			if response.status_code != 204:
+				self.logWarning(f'Failed "{action}" on smartlock **{lockName}**, error code {response.status_code}')
+				continue
+
+		self.endDialog(sessionId=session.sessionId, text=self.randomTalk('doneClose') if action == 'close' else self.randomTalk(text='doneOpen'))

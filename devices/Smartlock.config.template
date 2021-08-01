@@ -1,18 +1,10 @@
 {
 	"deviceConfigs": {
-		"dummy": {
-			"defaultValue": false,
-			"dataType"    : "boolean",
+		"smartlockId": {
+			"defaultValue": 0,
+			"dataType"    : "integer",
 			"isSensitive" : false,
-			"description" : "Remove me!!"
-		}
-	},
-	"linkConfigs": {
-		"alsoDummy": {
-			"defaultValue": false,
-			"dataType"    : "boolean",
-			"isSensitive" : false,
-			"description" : "Remove me too!!"
+			"description" : "The Nuki lock Id"
 		}
 	}
 }
