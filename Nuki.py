@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 #
-#  Last modified: 2021.08.01 at 19:15:43 CEST
+#  Last modified: 2021.08.01 at 20:12:44 CEST
 
 #  Copyright (c) 2021
 #
@@ -43,7 +43,7 @@ import requests
 from core.ProjectAliceExceptions import SkillStartingFailed
 from core.base.model.AliceSkill import AliceSkill
 from core.dialog.model.DialogSession import DialogSession
-from core.util.Decorators import IntentHandler, KnownUser
+from core.util.Decorators import IntentHandler
 
 
 class Nuki(AliceSkill):
@@ -107,13 +107,12 @@ class Nuki(AliceSkill):
 			return
 
 		for lock in response.json():
-			self._smartLocks[lock.name] = lock
+			self._smartLocks[lock['name']] = lock
 
-		self.logInfo(f'Retrieved {len(response.json())} Nuki devices')
+		self.logInfo(f'Retrieved {len(response.json())} Nuki devices from Nuki web API')
 
 
 	@IntentHandler('HandleLock')
-	@KnownUser
 	def handleLock(self, session: DialogSession, **_kwargs):
 		if not self._connected:
 			self.logWarning('Cannot handle smart locks if API not connected')
@@ -124,20 +123,26 @@ class Nuki(AliceSkill):
 
 		deviceType = self.DeviceManager.getDeviceType(self._name, 'SmartLock')
 		if lockName == 'all':
-			devices = self.DeviceManager.getDevicesByType(deviceType=deviceType)
+			devices = self.DeviceManager.getDevicesByType(deviceType=deviceType, connectedOnly=False)
 		elif not location and not lockName:
-			devices = self.DeviceManager.getDevicesByLocation(locationId=session.locationId, deviceType=deviceType)
+			devices = self.DeviceManager.getDevicesByLocation(locationId=session.locationId, deviceType=deviceType, connectedOnly=False)
 		elif location and not lockName:
 			loc = self.LocationManager.getLocationByName(name=location)
 			if not loc:
 				self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownLocation'))
 				return
-			devices = self.DeviceManager.getDevicesByLocation(locationId=loc.id, deviceType=deviceType)
+			devices = self.DeviceManager.getDevicesByLocation(locationId=loc.id, deviceType=deviceType, connectedOnly=False)
 		else:
 			if lockName not in self._smartLocks:
 				self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownDevice', replace=lockName))
 				return
 			devices = [self._smartLocks[lockName]]
+
+		print(devices)
+
+		if not devices:
+			self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownLock'))
+			return
 
 		for device in devices:
 			nukiId = device.getConfig('smartlockId', None)
@@ -152,4 +157,4 @@ class Nuki(AliceSkill):
 			if response.status_code != 204:
 				self.logWarning(f'Failed "{action}" on smartlock **{lockName}**, error code {response.status_code}')
 
-		self.endDialog(sessionId=session.sessionId, text=self.randomTalk('doneClose') if action == 'close' else self.randomTalk(text='doneOpen'))
+		self.endDialog(sessionId=session.sessionId, text=self.randomTalk('doneClose') if action == 'lock' else self.randomTalk(text='doneOpen'))

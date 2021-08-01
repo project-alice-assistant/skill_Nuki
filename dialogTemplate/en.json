@@ -51,17 +51,21 @@
 			"utterances": [
 				"{open:=>actionType} the door",
 				"{lock:=>actionType} the door please",
-				"{lock:=>actionType} the door in the {entrance:=>location} please",
-				"please {lock:=>actionType} the door",
-				"can you please {close:=>actionType} the door",
-				"can you {unlock:=>actionType} the {main=>lockName} lock",
-				"please {close:=>actionType} the {main=>lockName} smart lock",
-				"{lock:=>actionType} my {main=>lockName} smart lock",
-				"{lock:=>actionType} {all=>lockName} my smart locks",
-				"please {unlock:=>actionType} {all=>lockName} the doors",
-				"{unlock:=>actionType} my {main=>lockName} Nuki",
-				"make sure the {main=>lockName} door is {unlocked:=>actionType}",
-				"check that my {main=>lockName} smart lock is {locked:=>actionType}"
+			  "{lock:=>actionType} the door in the {entrance:=>location} please",
+			  "please {lock:=>actionType} the door",
+			  "can you please {close:=>actionType} the door",
+			  "can you {unlock:=>actionType} the {main=>lockName} lock",
+			  "please {close:=>actionType} the {main=>lockName} smart lock",
+			  "{lock:=>actionType} my {main=>lockName} smart lock",
+			  "{lock:=>actionType} {all=>lockName} my smart locks",
+			  "please {unlock:=>actionType} {all=>lockName} the doors",
+			  "{unlock:=>actionType} my {main=>lockName} Nuki",
+			  "make sure the {main=>lockName} door is {unlocked:=>actionType}",
+			  "check that my {main=>lockName} smart lock is {locked:=>actionType}",
+			  "please {close:=>actionType} {all=>lockName} the doors",
+			  "can you {lock:=>actionType} {every=>lockName} smart locks",
+			  "{unlock:=>actionType} {all=>lockName} doors",
+			  "{lock:=>actionType} {all=>lockName} locks"
 			],
 			"slots": [
 				{
@@ -70,12 +74,12 @@
 					"type": "actionType",
 					"missingQuestion": ""
 				},
-				{
-					"name": "lockName",
-					"required": false,
-					"type": "actionType",
-					"missingQuestion": ""
-				},
+			  {
+				"name": "lockName",
+				"required": false,
+				"type": "lockName",
+				"missingQuestion": ""
+			  },
 				{
 					"name": "location",
 					"required": false,

@@ -1,4 +1,24 @@
+#  Copyright (c) 2021
+#
+#  This file, Smartlock.py, is part of Project Alice.
+#
+#  Project Alice is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
+#
+#  Last modified: 2021.08.01 at 19:52:27 CEST
+
 import sqlite3
+from pathlib import Path
 from typing import Dict, Union
 
 from core.device.model.Device import Device
@@ -22,3 +42,8 @@ class Smartlock(Device):
 
 	def __init__(self, data: Union[sqlite3.Row, Dict]):
 		super().__init__(data)
+
+
+	def getDeviceIcon(self) -> Path:
+		# TODO change icon depending on state, live ping on the api
+		return super().getDeviceIcon()

@@ -1,19 +1,19 @@
 {
-	"name": "Nuki",
-	"speakableName": "Nuki",
-	"version": "0.0.1",
-	"icon": "fab fa-battle-net",
-	"category": "security",
-	"author": "Psychokiller1888",
-	"maintainers": [],
-	"desc": "Connect your nuki smart locks to alice!",
-	"aliceMinVersion": "1.0.0-b3",
-	"pipRequirements": [],
-	"systemRequirements": [],
-	"conditions": {
-		"lang": [
-			"en"
-		],
-		"online": true
-	}
+  "name": "Nuki",
+  "speakableName": "Nuki",
+  "version": "0.0.1",
+  "icon": "fas fa-lock",
+  "category": "security",
+  "author": "Psychokiller1888",
+  "maintainers": [],
+  "desc": "Connect your Nuki smart locks to alice!",
+  "aliceMinVersion": "1.0.0-rc1",
+  "pipRequirements": [],
+  "systemRequirements": [],
+  "conditions": {
+	"lang": [
+	  "en"
+	],
+	"online": true
+  }
 }

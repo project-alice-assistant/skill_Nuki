@@ -1,18 +1,23 @@
 {
-	"unknownLocation": [
-		"Sorry, I don't know this location",
-		"I'm sorry, there's no location of that name in your house"
+  "unknownLocation": [
+	"Sorry, I don't know this location.",
+	"I'm sorry, there's no location of that name in your house."
+  ],
+  "unknownLock": [
+	"Sorry, but I don't know what lock you are talking about.",
+	"Really sorry, but there's no smart lock here.",
+	"I'm afraid I don't know what lock you mean"
+  ],
+  "smartLockNotFound": [
+	"Sorry but he smart lock named {} doesn't exist.",
+	"I'm sorry but I couldn't find any smart lock named {}."
+  ],
+  "doneClose": {
+	"default": [
+	  "Ok, smart lock closed!",
+	  "Sure, closed!",
+	  "Done, it's now close."
 	],
-	"smartLockNotFound": [
-		"Sorry but he smart lock named {} doesn't exist.",
-		"I'm sorry but I couldn't find any smart lock named {}."
-	],
-	"doneClose": {
-		"default": [
-			"Ok, smart lock closed!",
-			"Sure, closed!",
-			"Done, it's now close"
-		],
 		"short": [
 			"Ok!",
 			"Done!"
@@ -22,7 +27,7 @@
 		"default": [
 			"Ok, smart lock open!",
 			"Sure, open Sesame!",
-			"Done, it's now open"
+		  "Done, it's now open."
 		],
 		"short": [
 			"Ok!",
