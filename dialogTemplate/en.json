@@ -76,7 +76,6 @@
 					"type": "actionType",
 					"missingQuestion": ""
 				},
-				,
 				{
 					"name": "location",
 					"required": false,
