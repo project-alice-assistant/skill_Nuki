@@ -1,3 +1,43 @@
+#  Copyright (c) 2021
+#
+#  This file, Nuki.py, is part of Project Alice.
+#
+#  Project Alice is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
+#
+#  Last modified: 2021.08.01 at 19:15:43 CEST
+
+#  Copyright (c) 2021
+#
+#  This file, Nuki.py, is part of Project Alice.
+#
+#  Project Alice is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>
+#
+#  Last modified: 2021.08.01 at 19:14:59 CEST
+
+from typing import Dict
+
 import requests
 
 from core.ProjectAliceExceptions import SkillStartingFailed
@@ -9,11 +49,11 @@ from core.util.Decorators import IntentHandler, KnownUser
 class Nuki(AliceSkill):
 	"""
 	Author: Psychokiller1888
-	Description: Connect your nuki smart locks to alice!
+	Description: Connect your Nuki smart locks to alice!
 	"""
 
 	API_URL = 'https://api.nuki.io/'
-	HEADERS = dict()
+	HEADERS: Dict[str, str] = dict()
 
 	def __init__(self):
 		super().__init__()
@@ -111,6 +151,5 @@ class Nuki(AliceSkill):
 
 			if response.status_code != 204:
 				self.logWarning(f'Failed "{action}" on smartlock **{lockName}**, error code {response.status_code}')
-				continue
 
 		self.endDialog(sessionId=session.sessionId, text=self.randomTalk('doneClose') if action == 'close' else self.randomTalk(text='doneOpen'))
