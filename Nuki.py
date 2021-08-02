@@ -17,24 +17,6 @@
 #
 #  Last modified: 2021.08.02 at 06:39:56 CEST
 
-#  Copyright (c) 2021
-#
-#  This file, Nuki.py, is part of Project Alice.
-#
-#  Project Alice is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <https://www.gnu.org/licenses/>
-#
-#  Last modified: 2021.08.01 at 20:12:44 CEST
 import time
 from typing import Any, Dict
 
@@ -43,7 +25,7 @@ import requests
 from core.ProjectAliceExceptions import SkillStartingFailed
 from core.base.model.AliceSkill import AliceSkill
 from core.dialog.model.DialogSession import DialogSession
-from core.util.Decorators import IntentHandler, KnownUser
+from core.util.Decorators import IntentHandler
 
 
 class Nuki(AliceSkill):
@@ -68,8 +50,12 @@ class Nuki(AliceSkill):
 
 		self._connected = True
 		self.getSmartLocks()
+		self.logInfo(f'Retrieved {len(self._smartLocks)} Nuki device from Nuki web API', plural='device')
 
-		self.logInfo(f'Retrieved {len(self._smartLocks)} Nuki devices from Nuki web API')
+
+	def onBooted(self):
+		if not self._connected:
+			return
 
 		self.checkSmartlockDevices()
 		self.ThreadManager.newThread(name='updateSmartLocks', target=self.runner)
@@ -83,13 +69,13 @@ class Nuki(AliceSkill):
 			time.sleep(5)
 			self.getSmartLocks()
 
-			for smartlockId, smartlock in self._smartLocks.items():
+			for smartlock in self._smartLocks:
 				for device in self._myDevices.values():
-					if device.getConfig('smartlockId') != smartlockId:
+					if device.getConfig('smartlockId') != smartlock['smartlockId']:
 						continue
 
-					configs: Dict[str, Any] = smartlock.get('state', dict())
-					device.updateConfigs(configs)
+					params: Dict[str, Any] = smartlock.get('state', dict())
+					device.updateParams(params)
 					break
 
 
@@ -100,25 +86,30 @@ class Nuki(AliceSkill):
 		"""
 
 		# Check if what's on the web we have locally
-		for lockId, lock in self._smartLocks.items():
+		for lock in self._smartLocks:
 			found = False
 			for device in self.myDevices.values():
-				if device.getConfig('smartlockId') == lockId:
+				if device.getConfig('smartlockId') == lock['smartlockId']:
 					found = True
 					break
 
 			if not found:
 				self.logInfo(f'Found new smart lock with name **{lock["name"]}** on Nuki account')
-				device = self.DeviceManager.addNewDevice(deviceType='SmartLock', skillName=self.name, displayName=lock['name'])
-				configs: Dict[str, Any] = lock.get('state', dict())
-				configs.setdefault('smartlockId', lock['smartlockId'])
-				device.updateConfigs(configs)
+				device = self.DeviceManager.addNewDevice(deviceType='Smartlock', skillName=self.name, displayName=lock['name'], locationId=1)
+				device.updateParams(lock.get('state', dict()))
+				device.updateConfig('smartlockId', lock['smartlockId'])
 				device.connected = True
 
 		# Check if what we have locally is on the web
 		for device in self.myDevices.values():
 			lockId = device.getConfig('smartlockId')
-			if lockId not in self._smartLocks:
+			found = False
+			for smartlock in self._smartLocks:
+				if smartlock['smartlockId'] == lockId:
+					found = True
+					break
+
+			if not found:
 				self.logInfo(f'Smart lock with id **{lockId}** not found on Nuki account, removing from Alice')
 				self.DeviceManager.deleteDevice(deviceUid=device.uid)
 
@@ -169,7 +160,6 @@ class Nuki(AliceSkill):
 
 
 	@IntentHandler('HandleLock')
-	@KnownUser
 	def handleLock(self, session: DialogSession, **_kwargs):
 		"""
 		Handles lock and unlock voice commands
@@ -181,7 +171,8 @@ class Nuki(AliceSkill):
 		lockName: str = session.slotValue('lockName')
 		location: str = session.slotRawValue('location')
 
-		deviceType = self.DeviceManager.getDeviceType(self._name, 'SmartLock')
+		deviceType = self.DeviceManager.getDeviceType(self._name, 'Smartlock')
+		devices = list()
 		if lockName == 'all':
 			devices = self.DeviceManager.getDevicesByType(deviceType=deviceType, connectedOnly=False)
 		elif not location and not lockName:
@@ -193,17 +184,10 @@ class Nuki(AliceSkill):
 				return
 			devices = self.DeviceManager.getDevicesByLocation(locationId=loc.id, deviceType=deviceType, connectedOnly=False)
 		else:
-			lockId = 0
-			for lock in self._smartLocks:
-				if lock['name'].lower() == lockName.lower():
-					lockId = lock['smartlockId']
+			for device in self.myDevices.values():
+				if device.getConfig('displayName').lower() == lockName.lower():
+					devices.append(device)
 					break
-
-			if not lockId:
-				self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownLock', replace=lockName))
-				return
-
-			devices = [self._smartLocks[lockId]]
 
 		if not devices:
 			self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownLock'))

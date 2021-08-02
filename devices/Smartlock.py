@@ -45,8 +45,8 @@ class Smartlock(Device):
 
 
 	def getDeviceIcon(self) -> Path:
-		if self.getConfig('state') == 1:
-			state = 'Smartlock'
+		if self.getParam('state') == 1:
+			state = 'locked'
 		else:
 			state = 'unlocked'
 
@@ -54,7 +54,7 @@ class Smartlock(Device):
 
 
 	def onUIClick(self) -> dict:
-		if self.getConfig('state') == 1:
+		if self.getParam('state') == 1:
 			action = 'unlock'
 		else:
 			action = 'lock'
