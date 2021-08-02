@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 #
-#  Last modified: 2021.08.01 at 20:12:44 CEST
+#  Last modified: 2021.08.02 at 06:39:56 CEST
 
 #  Copyright (c) 2021
 #
@@ -34,7 +34,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>
 #
-#  Last modified: 2021.08.01 at 19:14:59 CEST
+#  Last modified: 2021.08.01 at 20:12:44 CEST
 
 from typing import Dict
 
@@ -64,10 +64,33 @@ class Nuki(AliceSkill):
 	def onStart(self):
 		super().onStart()
 		if not self.connectAPI():
-			raise SkillStartingFailed(skillName=self.name, error='Please provide a valid Nuki developper API token in the skill settings')
+			raise SkillStartingFailed(skillName=self.name, error='Please provide a valid Nuki developer API token in the skill settings')
 
 		self._connected = True
 		self.getSmartLocks()
+		self.checkLocksDevices()
+
+
+	def checkLocksDevices(self):
+		"""
+		Check if we have all locks and not any non existing one
+		:return:
+		"""
+
+		# Check if what's on the web we have locally
+		for lockId, lock in self._smartLocks.items():
+			found = False
+			for device in self.myDevices.values():
+				if device.getConfig('smartlockId') == lockId:
+					found = True
+					break
+
+			if not found:
+				self.logInfo(f'Found new smart lock with name **{lock["name"]}** on Nuki account')
+				device = self.DeviceManager.addNewDevice(deviceType='SmartLock', skillName=self.name, displayName=lock['name'])
+				device.updateConfigs({
+					'smartlockId': lock['smartlockId']
+				})
 
 
 	def connectAPI(self) -> bool:
@@ -76,7 +99,7 @@ class Nuki(AliceSkill):
 			return False
 
 		self.HEADERS = {
-				'Accept': 'application/json',
+			'Accept'           : 'application/json',
 				'Authorization': f'Bearer {self.getConfig("apiToken")}'
 			}
 
@@ -106,8 +129,7 @@ class Nuki(AliceSkill):
 			self.logWarning("Couldn't retrieve smart locks")
 			return
 
-		for lock in response.json():
-			self._smartLocks[lock['name']] = lock
+		self._smartLocks = response.json()
 
 		self.logInfo(f'Retrieved {len(response.json())} Nuki devices from Nuki web API')
 
@@ -117,9 +139,9 @@ class Nuki(AliceSkill):
 		if not self._connected:
 			self.logWarning('Cannot handle smart locks if API not connected')
 
-		action = session.slotValue('actionType')
-		lockName = session.slotValue('lockName')
-		location = session.slotRawValue('location')
+		action: str = session.slotValue('actionType')
+		lockName: str = session.slotValue('lockName')
+		location: str = session.slotRawValue('location')
 
 		deviceType = self.DeviceManager.getDeviceType(self._name, 'SmartLock')
 		if lockName == 'all':
@@ -133,12 +155,17 @@ class Nuki(AliceSkill):
 				return
 			devices = self.DeviceManager.getDevicesByLocation(locationId=loc.id, deviceType=deviceType, connectedOnly=False)
 		else:
-			if lockName not in self._smartLocks:
+			lockId = 0
+			for lock in self._smartLocks:
+				if lock['name'].lower() == lockName.lower():
+					lockId = lock['smartlockId']
+					break
+
+			if not lockId:
 				self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownDevice', replace=lockName))
 				return
-			devices = [self._smartLocks[lockName]]
 
-		print(devices)
+			devices = [self._smartLocks[lockId]]
 
 		if not devices:
 			self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='unknownLock'))
@@ -149,7 +176,7 @@ class Nuki(AliceSkill):
 			if not nukiId:
 				continue
 
-			response = requests.get(
+			response = requests.post(
 				url=f'{self.API_URL}smartlock/{nukiId}/action/{action}',
 				headers=self.HEADERS
 			)

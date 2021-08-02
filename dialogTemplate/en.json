@@ -1,92 +1,92 @@
 {
-	"skill": "Nuki",
-	"slotTypes": [
+  "skill": "Nuki",
+  "slotTypes": [
+	{
+	  "name": "lockName",
+	  "matchingStrictness": null,
+	  "automaticallyExtensible": true,
+	  "useSynonyms": true,
+	  "values": [
 		{
-			"name": "lockName",
-			"matchingStrictness": null,
-			"automaticallyExtensible": true,
-			"useSynonyms": true,
-			"values": [
-				{
-					"value": "main",
-					"synonyms": []
-				},
-				{
-					"value": "all",
-					"synonyms": [
-						"every"
-					]
-				}
-			]
+		  "value": "main",
+		  "synonyms": []
 		},
 		{
-			"name": "actionType",
-			"matchingStrictness": null,
-			"automaticallyExtensible": true,
-			"useSynonyms": true,
-			"values": [
-				{
-					"value": "unlock",
-					"synonyms": [
-						"open",
-						"unlocked",
-						"opened"
-					]
-				},
-				{
-					"value": "lock",
-					"synonyms": [
-						"close",
-						"locked",
-						"closed"
-					]
-				}
-			]
+		  "value": "all",
+		  "synonyms": [
+			"every"
+		  ]
 		}
-	],
-	"intents": [
+	  ]
+	},
+	{
+	  "name": "actionType",
+	  "matchingStrictness": null,
+	  "automaticallyExtensible": true,
+	  "useSynonyms": true,
+	  "values": [
 		{
-			"name": "HandleLock",
-			"enabledByDefault": true,
-			"utterances": [
-				"{open:=>actionType} the door",
-				"{lock:=>actionType} the door please",
-			  "{lock:=>actionType} the door in the {entrance:=>location} please",
-			  "please {lock:=>actionType} the door",
-			  "can you please {close:=>actionType} the door",
-			  "can you {unlock:=>actionType} the {main=>lockName} lock",
-			  "please {close:=>actionType} the {main=>lockName} smart lock",
-			  "{lock:=>actionType} my {main=>lockName} smart lock",
-			  "{lock:=>actionType} {all=>lockName} my smart locks",
-			  "please {unlock:=>actionType} {all=>lockName} the doors",
-			  "{unlock:=>actionType} my {main=>lockName} Nuki",
-			  "make sure the {main=>lockName} door is {unlocked:=>actionType}",
-			  "check that my {main=>lockName} smart lock is {locked:=>actionType}",
-			  "please {close:=>actionType} {all=>lockName} the doors",
-			  "can you {lock:=>actionType} {every=>lockName} smart locks",
-			  "{unlock:=>actionType} {all=>lockName} doors",
-			  "{lock:=>actionType} {all=>lockName} locks"
-			],
-			"slots": [
-				{
-					"name": "actionType",
-					"required": false,
-					"type": "actionType",
-					"missingQuestion": ""
-				},
-			  {
-				"name": "lockName",
-				"required": false,
-				"type": "lockName",
-				"missingQuestion": ""
-			  },
-				{
-					"name": "location",
-					"required": false,
-					"type": "Alice/Location",
-					"missingQuestion": ""
-				}
-			]
+		  "value": "unlock",
+		  "synonyms": [
+			"open",
+			"unlocked",
+			"opened"
+		  ]
+		},
+		{
+		  "value": "lock",
+		  "synonyms": [
+			"close",
+			"locked",
+			"closed"
+		  ]
 		}
-	]
+	  ]
+	}
+  ],
+  "intents": [
+	{
+	  "name": "HandleLock",
+	  "enabledByDefault": true,
+	  "utterances": [
+		"{open:=>actionType} the door",
+		"{lock:=>actionType} the door please",
+		"{lock:=>actionType} the door in the {entrance:=>location} please",
+		"please {lock:=>actionType} the door",
+		"can you please {close:=>actionType} the door",
+		"can you {unlock:=>actionType} the {main:=>lockName} lock",
+		"please {close:=>actionType} the {main:=>lockName} smart lock",
+		"{lock:=>actionType} my {main:=>lockName} smart lock",
+		"{lock:=>actionType} {all:=>lockName} my smart locks",
+		"please {unlock:=>actionType} {all:=>lockName} the doors",
+		"{unlock:=>actionType} my {main:=>lockName} Nuki",
+		"make sure the {main:=>lockName} door is {unlocked:=>actionType}",
+		"check that my {main:=>lockName} smart lock is {locked:=>actionType}",
+		"please {close:=>actionType} {all:=>lockName} the doors",
+		"can you {lock:=>actionType} {every:=>lockName} smart locks",
+		"{unlock:=>actionType} {all:=>lockName} doors",
+		"{lock:=>actionType} {all:=>lockName} locks"
+	  ],
+	  "slots": [
+		{
+		  "name": "actionType",
+		  "required": false,
+		  "type": "actionType",
+		  "missingQuestion": ""
+		},
+		{
+		  "name": "lockName",
+		  "required": false,
+		  "type": "lockName",
+		  "missingQuestion": ""
+		},
+		{
+		  "name": "location",
+		  "required": false,
+		  "type": "Alice/Location",
+		  "missingQuestion": ""
+		}
+	  ]
+	}
+  ]
 }
