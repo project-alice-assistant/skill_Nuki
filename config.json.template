@@ -3,7 +3,7 @@
 		"defaultValue": "",
 		"dataType"    : "string",
 		"isSensitive" : true,
-		"description" : "Your Nuki developper API token",
+		"description" : "Your Nuki developer API token",
 		"onUpdate"	  : "connectAPI"
 	}
 }

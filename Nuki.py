@@ -24,6 +24,7 @@ import requests
 
 from core.ProjectAliceExceptions import SkillStartingFailed
 from core.base.model.AliceSkill import AliceSkill
+from core.commons import constants
 from core.dialog.model.DialogSession import DialogSession
 from core.util.Decorators import IntentHandler
 
@@ -76,6 +77,8 @@ class Nuki(AliceSkill):
 
 					params: Dict[str, Any] = smartlock.get('state', dict())
 					device.updateParams(params)
+
+					self.MqttManager.publish(topic=constants.TOPIC_DEVICE_HEARTBEAT, payload={'uid': device.uid})
 					break
 
 

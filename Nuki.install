@@ -1,7 +1,7 @@
 {
   "name": "Nuki",
   "speakableName": "Nuki",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "icon": "fas fa-lock",
   "category": "security",
   "author": "Psychokiller1888",
