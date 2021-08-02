@@ -45,5 +45,19 @@ class Smartlock(Device):
 
 
 	def getDeviceIcon(self) -> Path:
-		# TODO change icon depending on state, live ping on the api
-		return super().getDeviceIcon()
+		if self.getConfig('state') == 1:
+			state = 'Smartlock'
+		else:
+			state = 'unlocked'
+
+		return Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/{state}.png')
+
+
+	def onUIClick(self) -> dict:
+		if self.getConfig('state') == 1:
+			action = 'unlock'
+		else:
+			action = 'lock'
+
+		self.skillInstance.sendAPIRequest(nukiId=self.getConfig('smartlockId'), action=action)
+		return super().onUIClick()
