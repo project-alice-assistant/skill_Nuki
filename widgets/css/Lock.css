@@ -1,6 +1,66 @@
+:root {
+	--nuki-tile_background: #d1d1d1;
+	--nuki-container-width: 150px;
+	--nuki-container-height: 300px;
+}
+
 .Lock {
 	width: 100%;
 	height: 100%;
 	padding: 5px;
 	box-sizing: border-box;
+}
+
+.nuki_tileContainer {
+	display: flex;
+	flex-flow: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 15px;
+}
+
+.nuki_tile {
+	width: var(--nuki-container-width);
+	min-width: var(--nuki-container-width);
+	max-width: var(--nuki-container-width);
+	height: var(--nuki-container-height);
+	min-height: var(--nuki-container-height);
+	max-height: var(--nuki-container-height);
+	display: flex;
+	flex-direction: column;
+	background-color: #d1d1d1;
+	margin-right: 15px;
+}
+
+.nuki_name {
+	font-family: var(--bold);
+	text-transform: uppercase;
+	width: calc(var(--nuki-container-width) - 30px);
+	height: calc(var(--nuki-container-width) - 30px);
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+	justify-items: center;
+	background-color: var(--mainBG);
+	font-size: 1.2em;
+	border-radius: 600px;
+	margin: 20px auto;
+	overflow: hidden;
+}
+
+.nuki_button {
+	width: 100%;
+	margin: 20px auto;
+	text-align: center;
+	font-size: 5em;
+	color: #93f5ff;
+	-webkit-text-stroke-width: 2px;
+	-webkit-text-stroke-color: var(--mainBG);
+}
+
+.nuki_button:hover {
+	cursor: pointer;
 }

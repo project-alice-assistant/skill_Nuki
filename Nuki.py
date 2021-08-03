@@ -206,6 +206,17 @@ class Nuki(AliceSkill):
 		self.endDialog(sessionId=session.sessionId, text=self.randomTalk('doneClose') if action == 'lock' else self.randomTalk(text='doneOpen'))
 
 
+	def toggleLock(self, uid: str):
+		device = self.myDevices.get(uid, None)
+		if not device:
+			return
+
+		if device.getParam('state') == 1:
+			self.sendAPIRequest(nukiId=device.getConfig('smartlockId'), action='unlock')
+		else:
+			self.sendAPIRequest(nukiId=device.getConfig('smartlockId'), action='lock')
+
+
 	def sendAPIRequest(self, nukiId: int, action: str):
 		response = requests.post(
 			url=f'{self.API_URL}smartlock/{nukiId}/action/{action}',
