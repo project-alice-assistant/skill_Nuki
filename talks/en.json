@@ -1,4 +1,9 @@
 {
+  "notConnected": [
+	"Sorry, the API is not connected, can't do that.",
+	"Please check your skill settings, the API is not connected.",
+	"I can't access the API, sorry, please check the skill settings."
+  ],
   "unknownLocation": [
 	"Sorry, I don't know this location.",
 	"I'm sorry, there's no location of that name in your house."

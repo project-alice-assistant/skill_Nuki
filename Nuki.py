@@ -26,7 +26,7 @@ from core.ProjectAliceExceptions import SkillStartingFailed
 from core.base.model.AliceSkill import AliceSkill
 from core.commons import constants
 from core.dialog.model.DialogSession import DialogSession
-from core.util.Decorators import IntentHandler
+from core.util.Decorators import IntentHandler, KnownUser
 
 
 class Nuki(AliceSkill):
@@ -168,7 +168,12 @@ class Nuki(AliceSkill):
 		Handles lock and unlock voice commands
 		"""
 		if not self._connected:
-			self.logWarning('Cannot handle smart locks if API not connected')
+			self.endDialog(sessionId=session.sessionId, text=self.randomTalk(text='notConnected'))
+			return
+
+		if self.getConfig('onlyKnownUsers') and session.user == constants.UNKNOWN_USER:
+			self.endDialog(sessionId=session.sessionId, text=self.randomTalk('unknownUser', skill='system'))
+			return
 
 		action: str = session.slotValue('actionType')
 		lockName: str = session.slotValue('lockName')

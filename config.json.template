@@ -5,5 +5,11 @@
 		"isSensitive" : true,
 		"description" : "Your Nuki developer API token",
 		"onUpdate"	  : "connectAPI"
+	},
+  	"onlyKnownUsers": {
+	  "defaultValue": true,
+	  "dataType"    : "boolean",
+	  "isSensitive" : false,
+	  "description" : "Do not let unknown users manage your locks"
 	}
 }
