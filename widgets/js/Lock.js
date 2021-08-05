@@ -4,6 +4,8 @@ class Nuki_Lock extends Widget {
 		super(uid, widgetId)
 		this.refresh()
 		this.interval = setInterval(()=>this.refresh(), 5000)
+		this.myStateWas = null
+		this.myDoorStateWas = null
 	}
 
 	stop() {
@@ -33,8 +35,11 @@ class Nuki_Lock extends Widget {
 					tile.appendChild(lockName)
 					tile.appendChild(button)
 
-					tile.addEventListener('click', function() {
+					button.addEventListener('click', function() {
+						self.myStateWas = smartlock['deviceParams']['state']
+						self.myDoorStateWas = smartlock['deviceParams']['doorState']
 						self.mySkill.toggleLock({'uid': uid})
+						this.classList.add('nuki_button_animation')
 					})
 
 					self.myDiv.querySelector('#nuki_container').appendChild(tile)
@@ -49,12 +54,27 @@ class Nuki_Lock extends Widget {
 				}
 
 				if (smartlock['deviceParams']['state'] === 1) {
-					tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/closed.png")`
+					if (self.myStateWas !== smartlock['deviceParams']['state']) {
+						tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/closed.png")`
+						tile.querySelector('.nuki_button').classList.remove('nuki_button_animation')
+						self.myStateWas = smartlock['deviceParams']['state']
+					}
 				} else {
-					if (smartlock['deviceParams']['doorState'] === 3) {
-						tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/door_open.png")`
-					} else {
-						tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/open.png")`
+					if (self.myStateWas !== smartlock['deviceParams']['state'] || self.myDoorStateWas !== smartlock['deviceParams']['doorState']) {
+						if (smartlock['deviceParams']['doorState'] === 3) {
+							if (self.myDoorStateWas !== smartlock['deviceParams']['doorState']) {
+								self.myDoorStateWas = smartlock['deviceParams']['doorState']
+								self.myStateWas = smartlock['deviceParams']['state']
+								tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/door_open.png")`
+								tile.querySelector('.nuki_button').classList.remove('nuki_button_animation')
+							}
+						} else {
+							if (self.myStateWas !== smartlock['deviceParams']['state']) {
+								self.myStateWas = smartlock['deviceParams']['state']
+								tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/open.png")`
+								tile.querySelector('.nuki_button').classList.remove('nuki_button_animation')
+							}
+						}
 					}
 				}
 			}

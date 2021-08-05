@@ -78,6 +78,11 @@ class Nuki(AliceSkill):
 					params: Dict[str, Any] = smartlock.get('state', dict())
 					device.updateParams(params)
 
+					if params.get('batteryCritical', None):
+						device.updateParam('batteryWarning', True)
+					else:
+						device.updateParam('batteryWarning', False)
+
 					self.MqttManager.publish(topic=constants.TOPIC_DEVICE_HEARTBEAT, payload={'uid': device.uid})
 					break
 
