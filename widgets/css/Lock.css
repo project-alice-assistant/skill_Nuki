@@ -1,7 +1,7 @@
 :root {
 	--nuki-tile_background: #d1d1d1;
 	--nuki-container-width: 150px;
-	--nuki-container-height: 300px;
+	--nuki-container-height: 150px;
 }
 
 .Lock {
@@ -28,9 +28,6 @@
 	height: var(--nuki-container-height);
 	min-height: var(--nuki-container-height);
 	max-height: var(--nuki-container-height);
-	display: flex;
-	flex-direction: column;
-	background-color: #d1d1d1;
 	margin-right: 15px;
 }
 
@@ -47,18 +44,18 @@
 	background-color: var(--mainBG);
 	font-size: 1.2em;
 	border-radius: 600px;
-	margin: 20px auto;
+	margin: 15px auto;
 	overflow: hidden;
 }
 
 .nuki_button {
-	width: 100%;
-	margin: 20px auto;
-	text-align: center;
-	font-size: 5em;
-	color: #93f5ff;
-	-webkit-text-stroke-width: 2px;
-	-webkit-text-stroke-color: var(--mainBG);
+	width: calc(var(--nuki-container-width) - 10px);
+	height: calc(var(--nuki-container-width) - 10px);
+	background-size: calc(var(--nuki-container-width) - 10px);
+	background-repeat: no-repeat;
+	margin: auto;
+	position: relative;
+	top: -145px;
 }
 
 .nuki_button:hover {

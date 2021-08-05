@@ -27,7 +27,7 @@ class Nuki_Lock extends Widget {
 					let content = document.createTextNode(smartlock['deviceConfigs']['displayName'])
 					lockName.appendChild(content)
 
-					let button = document.createElement('i')
+					let button = document.createElement('div')
 					button.classList.add('nuki_button')
 
 					tile.appendChild(lockName)
@@ -49,15 +49,13 @@ class Nuki_Lock extends Widget {
 				}
 
 				if (smartlock['deviceParams']['state'] === 1) {
-					tile.querySelector('.nuki_button').classList.add('far')
-					tile.querySelector('.nuki_button').classList.add('fa-circle')
-					tile.querySelector('.nuki_button').classList.remove('fas')
-					tile.querySelector('.nuki_button').classList.remove('fa-circle-notch')
+					tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/closed.png")`
 				} else {
-					tile.querySelector('.nuki_button').classList.add('fas')
-					tile.querySelector('.nuki_button').classList.add('fa-circle-notch')
-					tile.querySelector('.nuki_button').classList.remove('far')
-					tile.querySelector('.nuki_button').classList.remove('fa-circle')
+					if (smartlock['deviceParams']['doorState'] === 3) {
+						tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/door_open.png")`
+					} else {
+						tile.querySelector('.nuki_button').style.backgroundImage = `url("http://${this.aliceSettings['aliceIp']}:${this.aliceSettings['apiPort']}/api/v1.0.1/widgets/resources/img/Nuki/open.png")`
+					}
 				}
 			}
 		})

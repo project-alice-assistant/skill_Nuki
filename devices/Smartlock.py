@@ -46,9 +46,12 @@ class Smartlock(Device):
 
 	def getDeviceIcon(self) -> Path:
 		if self.getParam('state') == 1:
-			state = 'locked'
+			state = 'closed'
 		else:
-			state = 'unlocked'
+			if self.getParam('doorState') == 3:
+				state = 'door_open'
+			else:
+				state = 'open'
 
 		return Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/{state}.png')
 
