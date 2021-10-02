@@ -19,7 +19,7 @@
 
 import sqlite3
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 from core.device.model.Device import Device
 from core.device.model.DeviceAbility import DeviceAbility
@@ -44,7 +44,7 @@ class Smartlock(Device):
 		super().__init__(data)
 
 
-	def getDeviceIcon(self) -> Path:
+	def getDeviceIcon(self, path: Optional[Path] = None) -> Path:
 		if self.getParam('state') == 1:
 			state = 'closed'
 		else:
@@ -53,7 +53,8 @@ class Smartlock(Device):
 			else:
 				state = 'open'
 
-		return Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/{state}.png')
+		icon = Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/{state}.png')
+		return super().getDeviceIcon(icon)
 
 
 	def onUIClick(self) -> dict:
