@@ -26,7 +26,7 @@ from core.ProjectAliceExceptions import SkillStartingFailed
 from core.base.model.AliceSkill import AliceSkill
 from core.commons import constants
 from core.dialog.model.DialogSession import DialogSession
-from core.util.Decorators import IntentHandler, KnownUser
+from core.util.Decorators import IntentHandler
 
 
 class Nuki(AliceSkill):
@@ -49,7 +49,6 @@ class Nuki(AliceSkill):
 		if not self.connectAPI():
 			raise SkillStartingFailed(skillName=self.name, error='Please provide a valid Nuki developer API token in the skill settings')
 
-		self._connected = True
 		self.getSmartLocks()
 		self.logInfo(f'Retrieved {len(self._smartLocks)} Nuki device from Nuki web API', plural='device')
 
@@ -64,9 +63,12 @@ class Nuki(AliceSkill):
 
 	def runner(self):
 		"""
-		Updates the smartlocks every 5 seconds
+		Updates the smart locks every 5 seconds
 		"""
 		while True:
+			if not self._connected:
+				break
+
 			time.sleep(5)
 			self.getSmartLocks()
 
@@ -89,7 +91,7 @@ class Nuki(AliceSkill):
 
 	def checkSmartlockDevices(self):
 		"""
-		Check if we have all locks and not any non existing one
+		Check if we have all locks and not any non-existing one
 		:return:
 		"""
 
@@ -122,12 +124,15 @@ class Nuki(AliceSkill):
 				self.DeviceManager.deleteDevice(deviceUid=device.uid)
 
 
-	def connectAPI(self) -> bool:
+	def connectAPI(self, apiToken: str = '') -> bool:
 		"""
 		Tries to connect to the Nuki web api
 		"""
-		apiToken = self.getConfig('apiToken')
 		if not apiToken:
+			apiToken = self.getConfig('apiToken')
+
+		if not apiToken:
+			self._connected = False
 			return False
 
 		self.HEADERS = {
@@ -141,9 +146,11 @@ class Nuki(AliceSkill):
 		)
 
 		if response.status_code != 200:
+			self._connected = False
 			return False
 
 		self.logInfo('Nuki API connected!')
+		self._connected = True
 		return True
 
 
