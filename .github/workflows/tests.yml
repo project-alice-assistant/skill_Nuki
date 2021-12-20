@@ -29,8 +29,7 @@ jobs:
           projectalice-sk validate
       - name: Mypi tests
         run: |
-          mypy . || true
-          mypy --install-types --non-interactive .
+          mypy . || mypy --install-types --non-interactive .
       - name: Sonarcloud scan
         uses: SonarSource/sonarcloud-github-action@v1.4
         env:
