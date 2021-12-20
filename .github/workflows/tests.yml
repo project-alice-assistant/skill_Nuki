@@ -30,6 +30,10 @@ jobs:
         uses: jpetrucciani/mypy-check@master
         with:
           path: '.'
+      - name: Mypi tests
+        uses: jpetrucciani/mypy-check@master
+        with:
+          path: '.'
           mypy_flags: '--install-types --non-interactive'
       - name: Sonarcloud scan
         uses: SonarSource/sonarcloud-github-action@v1.4
